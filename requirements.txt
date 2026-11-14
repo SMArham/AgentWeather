@@ -1,0 +1,36 @@
+# Core & Utilities
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+requests>=2.31.0
+pyyaml>=6.0.1
+
+# Data Processing & Feature Store
+pandas>=2.0.0
+numpy>=1.24.0
+hopsworks>=3.7.0
+
+# Machine Learning & Time-Series
+scikit-learn>=1.3.0
+statsmodels>=0.14.0
+prophet>=1.1.4
+torch>=2.0.0
+xgboost>=2.0.0
+
+# Model Explainability & Drift
+shap>=0.44.0
+lime>=0.2.0.1
+scipy>=1.11.0
+
+# LLMs & Multi-Agent Layer
+langgraph>=0.2.0
+langchain>=0.2.0
+langchain-core>=0.2.0
+langchain-groq>=0.1.0
+
+# Web Application
+streamlit>=1.35.0
+plotly>=5.20.0
+
+# Testing & Quality
+pytest>=8.0.0
+ruff>=0.4.0
