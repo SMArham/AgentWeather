@@ -35,7 +35,14 @@ wheels/
 secrets.toml
 credentials.json
 
-# Hopsworks & Model artifacts
+# Internship Documents & Presentations (Excluded from Git)
+*.pdf
+*.docx
+*.pptx
+*.ppt
+*.doc
+
+# Hopsworks & Model artifacts & Local Cache
 *.joblib
 *.pkl
 *.h5
@@ -44,6 +51,7 @@ credentials.json
 models/
 data/raw/
 data/processed/
+cache/
 
 # Streamlit
 .streamlit/secrets.toml
