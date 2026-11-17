@@ -11,21 +11,19 @@
 
 ---
 
-## 📌 Executive Summary
-**AgentWeather** forecasts six core environmental metrics for **Karachi** 24 hours ahead using an automated serverless machine learning pipeline and a **LangGraph multi-agent reasoning layer**.
-
-### Core Predicted Metrics (24-Hour Horizon)
+## 📌 Project Overview
+**AgentWeather** is an enterprise-grade, serverless forecasting and agentic monitoring system that predicts six core weather and air-quality metrics for **Karachi** 24 hours ahead:
 1. **Air Quality Index (AQI)**: Hourly particulate concentration ($PM_{2.5}, PM_{10}$)
 2. **Temperature (°C)**: Diurnal coastal heating cycle
 3. **Precipitation (mm)**: Rainfall probability and volume
 4. **Relative Humidity (%)**: Marine atmospheric moisture
-5. **UV Solar Index**: Photochemical exposure risk
+5. **UV Solar Index**: Photochemical solar risk
 6. **Wind Speed & Direction**: Decomposed into $U$ & $V$ vectors (Karachi South-West sea breeze)
 
 ---
 
 ## 🏆 Model Tournament vs 24-Hour Naive Baseline
-Every model is rigorously evaluated against the 24-hour Naive Baseline ($y_{\text{naive}} = y_{t-24}$). All 6 champion models significantly beat the baseline:
+All candidate models were strictly benchmarked against the 24-hour Naive Baseline ($y_{\text{naive}} = y_{t-24}$). All 6 champion models significantly outperformed the baseline:
 
 | Metric | Champion Model | Naive Baseline (RMSE) | Champion (RMSE) | Improvement (%) |
 | :--- | :--- | :--- | :--- | :--- |
@@ -38,47 +36,40 @@ Every model is rigorously evaluated against the 24-hour Naive Baseline ($y_{\tex
 
 ---
 
-## 🏗️ Top-to-Bottom Architecture
-
-```text
-[OpenWeather & AQICN APIs]
-           │ (Hourly Sync)
-           ▼
-[Feature Pipeline: Impute, Align, Wind U/V] ──► [Hopsworks Feature Store]
-                                                         │
-                                                         ▼
-[Model Tournament] ──────────────────────────► [Model Registry]
-(Ridge vs RF vs LSTM vs Baseline)                        │
-                                                         ▼
-                                              [LangGraph 4-Agent Layer]
-                                              • Forecast Agent (24h Predictions)
-                                              • Alert Agent (Public / Workers Hazard Checks)
-                                              • Weather Report Agent (News Briefing)
-                                              • Drift Agent (Distribution Surveillance)
-                                                         │
-                                                         ▼
-                                              [Streamlit Production Web App]
-```
+## 📈 Current Milestone Status (Step 2 Completed)
+- [x] **Step 1:** Base repository, Feature pipeline, Hopsworks cache, Model Tournament vs Naive Baseline.
+- [x] **Step 2:** 24-hour continuous trajectory curves, Karachi diurnal cycle modeling, and EDA & Data Storytelling module (`eda.py`).
+- [ ] **Step 3:** Live OpenWeather & AQICN API token integration and automated GitHub Actions hourly cron.
+- [ ] **Step 4:** Model Explainability with SHAP / LIME visualizations.
+- [ ] **Step 5:** 1-Click Streamlit Community Cloud public deployment.
 
 ---
 
-## 🚀 Quickstart & Local Execution
+## 🌐 Deployment Strategy
+The dashboard is designed for seamless, free hosting on **Streamlit Community Cloud**:
+1. Connect GitHub repository `SMArham/AgentWeather`.
+2. Main file path: `app.py`.
+3. Set environment secrets (`HOPSWORKS_API_KEY`, `OPENWEATHER_API_KEY`, `AQICN_API_TOKEN`, `GROQ_API_KEY`).
+4. Instant live public dashboard URL.
+
+---
+
+## 🚀 Local Execution
 
 ```bash
-# 1. Clone repository
-git clone https://github.com/SMArham/AgentWeather.git
-cd AgentWeather
-
-# 2. Install dependencies
+# 1. Install dependencies
 pip install -r requirements.txt
 
-# 3. Run Hourly Feature Ingestion
+# 2. Run Feature Ingestion
 python feature_pipeline.py
 
-# 4. Run Model Training & Baseline Benchmarks
+# 3. Run Training Tournament & Baseline Benchmarks
 python training_pipeline.py
 
-# 5. Launch Streamlit Web Dashboard
+# 4. Run Exploratory Data Analysis
+python eda.py
+
+# 5. Launch Interactive Dashboard
 streamlit run app.py
 ```
 
