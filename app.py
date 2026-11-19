@@ -58,6 +58,16 @@ forecast = state.get("forecast", {})
 trajectory = state.get("forecast_trajectory", [])
 df_traj = pd.DataFrame(trajectory) if trajectory else pd.DataFrame()
 
+# Export Forecast Component
+if not df_traj.empty:
+    st.sidebar.download_button(
+        label="📥 Download 24h Forecast (CSV)",
+        data=df_traj.to_csv(index=False).encode("utf-8"),
+        file_name=f"{selected_city.lower()}_24h_forecast.csv",
+        mime="text/csv",
+        use_container_width=True
+    )
+
 # -------------------------------------------------------------
 # 1. 24-Hour Forecast KPI Cards
 # -------------------------------------------------------------
