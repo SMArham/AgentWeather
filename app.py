@@ -40,6 +40,7 @@ st.caption("10Pearls SHINE Internship Program — Cohort 10 | Target City: **Kar
 st.sidebar.image("https://img.shields.io/badge/Status-Step%202%20Active-brightgreen", width=150)
 st.sidebar.header("🕹️ Control Center")
 selected_city = st.sidebar.selectbox("Target City", ["Karachi", "Lahore", "Islamabad"], index=0)
+st.sidebar.caption("📍 Coordinates: 24.8607° N, 67.0011° E (Karachi Coastal)")
 
 refresh_btn = st.sidebar.button("🔄 Execute Agent Cycle", use_container_width=True)
 
