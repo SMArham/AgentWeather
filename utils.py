@@ -36,8 +36,39 @@ def get_hopsworks_project():
         print(f"[Hopsworks] Running in local offline mode ({e}).")
         return None
 
+def fetch_open_meteo_live(latitude: float = 24.8607, longitude: float = 67.0011) -> Optional[Dict[str, Any]]:
+    """
+    Fetches real-time weather and air-quality data for Karachi from Open-Meteo APIs (keyless).
+    """
+    try:
+        import urllib.request
+        weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m,wind_direction_10m,uv_index"
+        aqi_url = f"https://air-quality-api.open-meteo.com/v1/air-quality?latitude={latitude}&longitude={longitude}&current=us_aqi,pm10,pm2_5"
+        
+        req_w = urllib.request.Request(weather_url, headers={"User-Agent": "AgentWeather/1.0"})
+        with urllib.request.urlopen(req_w, timeout=5) as resp:
+            data_w = json.loads(resp.read().decode())["current"]
+            
+        req_a = urllib.request.Request(aqi_url, headers={"User-Agent": "AgentWeather/1.0"})
+        with urllib.request.urlopen(req_a, timeout=5) as resp:
+            data_a = json.loads(resp.read().decode())["current"]
+            
+        return {
+            "source": "Open-Meteo_Live",
+            "temperature": float(data_w.get("temperature_2m", 25.0)),
+            "humidity": float(data_w.get("relative_humidity_2m", 60.0)),
+            "wind_speed": round(float(data_w.get("wind_speed_10m", 15.0)) / 3.6, 2),  # km/h to m/s
+            "wind_deg": float(data_w.get("wind_direction_10m", 240.0)),
+            "precipitation": float(data_w.get("precipitation", 0.0)),
+            "uv_index": float(data_w.get("uv_index", 0.0)),
+            "aqi": float(data_a.get("us_aqi", 110.0)),
+            "timestamp": datetime.now(timezone.utc).isoformat()
+        }
+    except Exception:
+        return None
+
 def fetch_raw_openweather(city: str = "Karachi", api_key: Optional[str] = None) -> Dict[str, Any]:
-    """Fetches real OpenWeather data or high-fidelity simulated observation for Karachi."""
+    """Fetches real OpenWeather data, falls back to Open-Meteo Live, then simulation."""
     api_key = api_key or os.getenv("OPENWEATHER_API_KEY")
     if api_key:
         try:
@@ -58,6 +89,11 @@ def fetch_raw_openweather(city: str = "Karachi", api_key: Optional[str] = None) 
                 }
         except Exception:
             pass
+
+    # Fallback to keyless Open-Meteo live API for Karachi
+    live_open_meteo = fetch_open_meteo_live()
+    if live_open_meteo:
+        return live_open_meteo
 
     now = datetime.now(timezone.utc)
     hour = now.hour

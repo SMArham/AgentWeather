@@ -148,12 +148,15 @@ with tab_tournament:
         report = joblib.load(report_file)
         rows = []
         for m, d in report.items():
+            c_scores = d["champion_scores"]
+            n_scores = d["naive_baseline_scores"]
             rows.append({
                 "Metric": m.upper(),
                 "Champion Model": d["champion_model"],
-                "Champion RMSE": d["champion_scores"]["rmse"],
-                "Naive Baseline RMSE": d["naive_baseline_scores"]["rmse"],
-                "Improvement (%)": f"+{d['improvement_pct']}%" if d['improvement_pct'] > 0 else f"{d['improvement_pct']}%",
+                "RMSE (Champ / Baseline)": f"{c_scores['rmse']} / {n_scores['rmse']}",
+                "MAE (Champ / Baseline)": f"{c_scores['mae']} / {n_scores['mae']}",
+                "R² (Champ / Baseline)": f"{c_scores['r2']} / {n_scores['r2']}",
+                "RMSE Improvement": f"+{d['improvement_pct']}%" if d['improvement_pct'] > 0 else f"{d['improvement_pct']}%",
                 "Validation Status": "✅ BEAT BASELINE" if d['improvement_pct'] > 0 else "❌ FAILED"
             })
         st.dataframe(pd.DataFrame(rows), use_container_width=True)
